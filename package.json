@@ -1,0 +1,14 @@
+{
+  "name": "falconpuncher",
+  "version": "0.1.0",
+  "description": "Bot Discord renvoyant un score",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^11.4.2"
+  }
+}
