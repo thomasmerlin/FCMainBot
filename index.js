@@ -43,7 +43,7 @@ bot.on(
     }
 )
 
-bot.login(Configuration.token);
+bot.login(process.env.BOT_TOKEN);
 
 
 /**
