@@ -1,16 +1,18 @@
 {
-  "name": "falconpuncher",
+  "name": "FC MainBot",
   "version": "0.1.0",
-  "description": "Bot Discord renvoyant un score",
+  "description": "Bot Discord doing several stuff",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
     "discord.js": "^11.4.2",
-    "request": "^2.85.0"
+    "mongoose": "^5.5.2",
+    "request": "^2.88.0",
+    "valid-url": "^1.0.9"
   }
 }
