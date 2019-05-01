@@ -1,10 +1,18 @@
 const UrlChecker = require('valid-url');
 
 module.exports = {
-    'urlChecker': require('valid-url'),
-    'isDateValid': function (testedDate) {
+    /**
+     * 
+     * @param {Discord.Message} message 
+     * @param {string} testedDate 
+     */
+    'isDateValid': function (message, testedDate) {
         var bits = testedDate.split('/');
         var date = new Date(bits[2] + '/' + bits[1] + '/' + bits[0]);
+
+        if (date < (new Date())) {
+            return false;
+        }
         return !!(date && (date.getMonth() + 1) == bits[1] && date.getDate() == Number(bits[0]));
     },
 
@@ -12,7 +20,7 @@ module.exports = {
      * @param {Discord.Message} message 
      */
     'notValidDateException' : function (message, date) {
-        return message.channel.send(`Invalid date \`${date}\` provided. Date must be at format day/month/year with correct values.`);
+        return message.channel.send(`Invalid date \`${date}\` provided. Date must be at format day/month/year with correct values and not anterior to today.`);
     },
 
     'isUrlValid': function (url) {

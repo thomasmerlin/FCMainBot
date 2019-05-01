@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
+const MongooseHelper = require('./../mongoose/helper/schema');
 const CommandHelper = require('./CommandHelper');
-const DataStore = require('./../dataStore.json');
 
 let tournament = function (date, url, name) {
     this.date = date;
@@ -32,21 +32,26 @@ module.exports = {
         command,
         messageArguments
     ) {
+        let requirements = true;
         if (messageArguments.length !== 4) {
             message.channel.send('You did not provide the good number of arguments.');
-            return this.getCommandHelp(message, command);
+            requirements = false;
+            this.getCommandHelp(message, command);
         }
 
         let tournamentDate = messageArguments[2];
-    
-        if (CommandHelper.isDateValid(tournamentDate) === false) {
-            return CommandHelper.notValidDateException(message, tournamentDate);
-        }
+        if (CommandHelper.isDateValid(message, tournamentDate) === false) {
+            requirements = false;
+            CommandHelper.notValidDateException(message, tournamentDate);
+        }       
 
         let tournamentUrl = messageArguments[3];
         if (CommandHelper.isUrlValid(tournamentUrl) === undefined) {
-            return CommandHelper.notValidUrlException(message, tournamentUrl);
+            requirements = false;
+            CommandHelper.notValidUrlException(message, tournamentUrl);
         }
+
+        return requirements;
     },
 
     /**
@@ -60,15 +65,27 @@ module.exports = {
         command,
         messageArguments
     ) {
-        this.checkCommandRequirements(message, command, messageArguments);
+        let requirements = this.checkCommandRequirements(message, command, messageArguments);
 
-        let tournamentName = messageArguments[1];
-        let tournamentDate = messageArguments[2];
-        let tournamentUrl = messageArguments[3];
+        if (requirements === true) {
+            let tournamentName = messageArguments[1];
+            let tournamentDate = messageArguments[2];
+            let tournamentUrl = messageArguments[3];
 
-        let newTournament = new tournament(tournamentDate, tournamentUrl, tournamentName);
-        DataStore.tournaments.push(newTournament);
+            let tournamentData = {
+                name: tournamentName,
+                date: tournamentDate,
+                url: tournamentUrl
+            }
 
-        return message.channel.send(`Tournament \`${tournamentName}\` added to planning ! :thumbsup:`);
+            try {
+                let flush = MongooseHelper.addDocument('tournament', tournamentData);
+                if (flush.error === false) {
+                    return message.channel.send(`Tournament \`${tournamentName}\` added to planning ! :thumbsup:`);
+                }
+            } catch (error) {
+                return message.channel.send(`An error occured : \`${error}\``);
+            }
+        }
     }
 }

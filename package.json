@@ -1,5 +1,5 @@
 {
-  "name": "FC MainBot",
+  "name": "fcmainbot",
   "version": "0.1.0",
   "description": "Bot Discord doing several stuff",
   "main": "index.js",
